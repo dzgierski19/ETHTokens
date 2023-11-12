@@ -12,9 +12,15 @@ async function main() {
   console.log(
     `The initial supply of this token is ${initialSupply.toString()} decimals units`
   );
+  // mint
   const code = await tokenContract.MINTER_ROLE();
   const roleTx = await tokenContract.grantRole(code, accounts[2].address);
   await roleTx.wait();
+  // handling roles
+  const mintTx = await tokenContract
+    .connect(accounts[2])
+    .mint(accounts[0].address, 2);
+  await mintTx.wait();
 }
 
 main().catch((err) => {
