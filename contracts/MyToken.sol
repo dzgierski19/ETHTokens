@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity >=0.7.0 <0.9.0;
 
-contract myToken {
-    uint256 _totaSupply;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-    constructor(){}
-    funciton totalSupply() public view returns (uint256) {
+contract MyToken is ERC20 {
+    constructor() ERC20("MyToken", "MTK") {}
 }
