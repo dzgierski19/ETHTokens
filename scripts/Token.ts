@@ -1,8 +1,9 @@
 import { ethers } from "hardhat";
+import { MyToken__factory } from "../typechain-types";
 
 async function main() {
   const accounts = await ethers.getSigners();
-  const tokenContractFactory = await ethers.getContractFactory("MyToken");
+  const tokenContractFactory = new MyToken__factory(accounts[0]);
   const tokenContract = await tokenContractFactory.deploy();
   await tokenContract.waitForDeployment();
   const tokenContractAddress = await tokenContract.getAddress();
