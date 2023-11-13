@@ -13,6 +13,8 @@ async function main() {
   await contract.waitForDeployment();
   const contractAddress = await contract.getAddress();
   console.log(`Token contract deployed at ${contractAddress}\n`);
+
+  //added minting
   const mintTx = await contract.mint(acc1.address, MINT_VALUE);
   await mintTx.wait();
   console.log(
@@ -23,6 +25,13 @@ async function main() {
     `Account ${
       acc1.address
     } has ${balanceBN.toString()} decimal units of MyToken\n`
+  );
+  // added votes
+  const votes = await contract.getVotes(acc1.address);
+  console.log(
+    `Account ${
+      acc1.address
+    } has ${votes.toString()} units of voting power before self delegating\n`
   );
 }
 
