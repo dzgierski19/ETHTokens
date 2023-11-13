@@ -21,6 +21,21 @@ async function main() {
     .connect(accounts[2])
     .mint(accounts[0].address, 2);
   await mintTx.wait();
+  // fetching token data
+  const [name, symbol, decimals, totalSupply] = await Promise.all([
+    tokenContract.name(),
+    tokenContract.symbol(),
+    tokenContract.decimals(),
+    tokenContract.totalSupply(),
+  ]);
+  console.log({ name, symbol, decimals, totalSupply });
+  // viewing balance
+  const myBalance = await tokenContract.balanceOf(accounts[0].address);
+  console.log(`My Balance is ${myBalance.toString()} decimals units`);
+  const otherBalance = await tokenContract.balanceOf(accounts[1].address);
+  console.log(
+    `The Balance of Acc1 is ${otherBalance.toString()} decimals units`
+  );
 }
 
 main().catch((err) => {
