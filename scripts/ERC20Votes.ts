@@ -1,6 +1,8 @@
 import { ethers } from "hardhat";
 import { MyToken__factory } from "../typechain-types";
 
+const MINT_VALUE = ethers.parseUnits("1");
+
 async function main() {
   const [deployer, acc1, acc2] = await ethers.getSigners();
   //deployer = accounts[0]
@@ -11,6 +13,17 @@ async function main() {
   await contract.waitForDeployment();
   const contractAddress = await contract.getAddress();
   console.log(`Token contract deployed at ${contractAddress}\n`);
+  const mintTx = await contract.mint(acc1.address, MINT_VALUE);
+  await mintTx.wait();
+  console.log(
+    `Minted ${MINT_VALUE.toString()} decimal units to account ${acc1.address}\n`
+  );
+  const balanceBN = await contract.balanceOf(acc1.address);
+  console.log(
+    `Account ${
+      acc1.address
+    } has ${balanceBN.toString()} decimal units of MyToken\n`
+  );
 }
 
 main().catch((err) => {
