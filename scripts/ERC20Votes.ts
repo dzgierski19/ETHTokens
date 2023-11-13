@@ -33,6 +33,15 @@ async function main() {
       acc1.address
     } has ${votes.toString()} units of voting power before self delegating\n`
   );
+  // self-delegate
+  const delegateTx = await contract.connect(acc1).delegate(acc1.address);
+  await delegateTx.wait();
+  const votesAfter = await contract.getVotes(acc1.address);
+  console.log(
+    `Account ${
+      acc1.address
+    } has ${votesAfter.toString()} units of voting power after self delegating\n`
+  );
 }
 
 main().catch((err) => {
