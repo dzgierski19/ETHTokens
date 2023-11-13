@@ -83,14 +83,35 @@ describe("NFT Shop", async () => {
     async function buyTokens() {
       const { accounts, tokenSaleContract, myTokenContract, myNFTContract } =
         await loadFixture(deployContracts);
+      const balanceBefore = await ethers.provider.getBalance(
+        accounts[1].address
+      );
       const tx = await tokenSaleContract
         .connect(accounts[1])
         .buyTokens({ value: TEST_BUY_VALUE });
       const txReceipt = await tx.wait();
-      return { accounts, tokenSaleContract, myTokenContract, myNFTContract };
+      const gasUsed = txReceipt?.gasUsed ?? 0n;
+      const gasPrice = txReceipt?.gasPrice ?? 0n;
+      const gasCosts = gasUsed * gasPrice;
+      const balanceAfter = await ethers.provider.getBalance(
+        accounts[1].address
+      );
+      return {
+        accounts,
+        tokenSaleContract,
+        myTokenContract,
+        myNFTContract,
+        balanceAfter,
+        balanceBefore,
+        gasCosts,
+      };
     }
     it("charges the correct amount of ETH", async () => {
-      throw new Error("Not implemented");
+      const { balanceBefore, balanceAfter, gasCosts } = await loadFixture(
+        buyTokens
+      );
+      const diff = balanceBefore - balanceAfter;
+      expect(diff).to.equal(TEST_BUY_VALUE + gasCosts);
     });
     it("gives the correct amount of tokens", async () => {
       const { accounts, myTokenContract } = await loadFixture(buyTokens);
